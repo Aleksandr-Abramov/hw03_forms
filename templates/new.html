@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Страница new{% endblock %}
+{% block header %}Форма для обратной связи.{% endblock %}
+{% block content %}
+    <h1>dsa</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.group.label_tag }}
+        {{ form.group }}
+        {{ form.text.label_tag }}
+        {{ form.text }}
+        <button type="submit">Отправить</button>
+    </form>
+{% endblock %}
