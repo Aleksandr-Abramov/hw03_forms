@@ -1,17 +1,10 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Group
+#from .models import Group
 from .models import Post
 
-#Максим, здравствуйте. Сохранил старый вариант создания формы в комментариях. Как напоминание. Прошу, не осуждать.)
-# class PostForm(forms.Form):
-#     group = forms.ModelChoiceField(queryset=Group.objects.all(),
-#                                    label="Группа",
-#                                    required=False
-#                                    )
-#     text = forms.CharField(widget=forms.Textarea)
-
+#Максим, здравствуйте. очень не привычно, прятать различные варианты в гит. Но, опыт, необычный и позновательный, спасибо.
 class PostForm(ModelForm):
     class Meta:
         model = Post
