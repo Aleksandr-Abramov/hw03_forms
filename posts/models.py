@@ -44,7 +44,7 @@ class Post(models.Model):
         blank=True,
         null=True,
         verbose_name="Автор:",
-        help_text="----"
+        help_text="Автор."
     )
 
     class Meta:

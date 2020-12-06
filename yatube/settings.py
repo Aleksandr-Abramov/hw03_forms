@@ -33,10 +33,13 @@ DEBUG = True
 # ]
 
 # Application definition
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'posts',
     'users',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
