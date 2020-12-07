@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.core.paginator import Paginator
 
 from .forms import PostForm
-from .models import Post, Group
+from .models import Post, Group, User
 
 
 def index(request):
@@ -53,18 +53,50 @@ def new_post(request):
 
 
 def profile(request, username):
-    # тут тело функции
-    return render(request, 'profile.html', {})
+    author_posts = User.objects.get(username=username)
+    posts = author_posts.posts.all()
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page")
+    page = paginator.get_page(page_number)
+    context = {
+        "page": page,
+        "author_posts": author_posts
+    }
+    return render(request, 'profile.html', context)
 
 
-# def post_view(request, username, post_id):
-#     # тут тело функции
-#     return render(request, 'post.html', {})
-#
-#
-# def post_edit(request, username, post_id):
-#     # тут тело функции. Не забудьте проверить,
-#     # что текущий пользователь — это автор записи.
-#     # В качестве шаблона страницы редактирования укажите шаблон создания новой записи
-#     # который вы создали раньше (вы могли назвать шаблон иначе)
-#     return render(request, 'post_new.html', {})
+def post_view(request, username, post_id):
+    author_posts = User.objects.get(username=username)
+    number_post = Post.objects.get(id=post_id)
+    context = {
+        "author_posts": author_posts,
+        "number_post": number_post
+    }
+
+    return render(request, 'post.html', context)
+
+
+def post_edit(request, username, post_id):
+    # тут тело функции. Не забудьте проверить,
+    # что текущий пользователь — это автор записи.
+    # В качестве шаблона страницы редактирования укажите шаблон создания новой записи
+    # который вы создали раньше (вы могли назвать шаблон иначе)
+    instance = get_object_or_404(Post, pk=post_id)
+    author_posts = User.objects.get(username=username)
+    number_post = Post.objects.get(id=post_id)
+
+    if request.method != "POST":
+        form = PostForm()
+        context = {"form": form}
+        return render(request, "post_new.html", context)
+
+    form = PostForm(request.POST)
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.author = request.user
+        post.save()
+        return redirect("index")
+    context = {"form": form}
+    return render(request, 'post_new.html', context)
+
+    # return render(request, 'post_new.html', {})
