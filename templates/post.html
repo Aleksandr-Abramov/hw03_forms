@@ -47,7 +47,9 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group ">
                             <!-- Ссылка на редактирование, показывается только автору записи -->
-                            <a class="btn btn-sm text-muted" href="/{{ author_posts.username }}/{{ number_post.id }}/edit" role="button">Редактировать</a>
+                            {% if request.user == number_post.author  %}
+                                <a class="btn btn-sm text-muted" href="" role="button">Редактировать</a>
+                            {% endif %}
                         </div>
                         <!-- Дата публикации  -->
                         <small class="text-muted">{{ number_post.pub_date|date:"d M Y" }}</small>

@@ -40,7 +40,7 @@ def new_post(request):
     if request.method != "POST":
         form = PostForm()
         context = {"form": form}
-        return render(request, "new.html", context)
+        return render(request, "post_new.html", context)
 
     form = PostForm(request.POST)
     if form.is_valid():
@@ -48,7 +48,10 @@ def new_post(request):
         post.author = request.user
         post.save()
         return redirect("index")
-    context = {"form": form}
+    context = {
+        "form": form,
+        "is_edit": False
+    }
     return render(request, 'index.html', context)
 
 
@@ -81,13 +84,16 @@ def post_edit(request, username, post_id):
     # что текущий пользователь — это автор записи.
     # В качестве шаблона страницы редактирования укажите шаблон создания новой записи
     # который вы создали раньше (вы могли назвать шаблон иначе)
-    instance = get_object_or_404(Post, pk=post_id)
-    author_posts = User.objects.get(username=username)
+    # instance = get_object_or_404(Post, pk=post_id)
+    # author_posts = User.objects.get(username=username)
     number_post = Post.objects.get(id=post_id)
 
     if request.method != "POST":
-        form = PostForm()
-        context = {"form": form}
+        form = PostForm(instance=number_post)
+        context = {
+            "form": form,
+            "is_edit": True
+            }
         return render(request, "post_new.html", context)
 
     form = PostForm(request.POST)
@@ -96,7 +102,8 @@ def post_edit(request, username, post_id):
         post.author = request.user
         post.save()
         return redirect("index")
-    context = {"form": form}
-    return render(request, 'post_new.html', context)
-
-    # return render(request, 'post_new.html', {})
+    context = {
+        "form": form,
+        "is_edit": True
+    }
+    return render(request, "post_new.html", context)
